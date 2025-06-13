@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: project3monkeys-web
+    env: python
+    buildCommand: |
+      pip install -r requirements.txt
+      python manage.py collectstatic --no-input
+      python manage.py migrate
+    startCommand: gunicorn project3monkeys.wsgi:application
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: project3monkeys.settings
+      - key: DATABASE_URL
+        fromDatabase:
+          name:  3monkeys-main
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+
+databases:
+  - name:  3monkeys-main
+    databaseName: 3monkeys-main
+    user: db_3monkeys_main_user
