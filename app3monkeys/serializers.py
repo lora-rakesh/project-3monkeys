@@ -1,4 +1,5 @@
 from rest_framework import serializers
+<<<<<<< HEAD
 from .models import ContactMessage
 
 class ContactMessageSerializer(serializers.ModelSerializer):
@@ -6,3 +7,33 @@ class ContactMessageSerializer(serializers.ModelSerializer):
         model = ContactMessage
         fields = ['id', 'name', 'email', 'message', 'submitted_at']
         read_only_fields = ['id', 'submitted_at']
+=======
+from .models import Event, EventImage
+
+class EventImageSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+
+    class Meta:
+        model = EventImage
+        fields = ['id', 'image_file', 'image_url', 'image']
+
+    def get_image(self, obj):
+        return obj.get_image()
+
+
+class EventSerializer(serializers.ModelSerializer):
+    images = EventImageSerializer(many=True, read_only=True)
+    main_image = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Event
+        fields = [
+            'id', 'title', 'type', 'subtype', 'date', 'location',
+            'description', 'image', 'image_url', 'main_image',
+            'price', 'capacity', 'amenities', 'contact', 'phone',
+            'highlights', 'images'
+        ]
+
+    def get_main_image(self, obj):
+        return obj.get_main_image()
+>>>>>>> a9ec0e804e460a9669081974ceff850e2b65cd17
