@@ -1,12 +1,5 @@
 from django.db import models
 
-# Create your models here.
-from django.contrib.auth.models import AbstractUser
-from django.db import models
-
-
-from django.db import models
-
 class ContactMessage(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
@@ -15,6 +8,7 @@ class ContactMessage(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.email}"
+
 class Event(models.Model):
     title = models.CharField(max_length=255)
     type = models.CharField(max_length=100)
@@ -22,9 +16,9 @@ class Event(models.Model):
     date = models.DateField()
     location = models.CharField(max_length=255)
     description = models.TextField()
-    
-    image = models.ImageField(upload_to='event_images/', blank=True, null=True)   # ✅ file upload
-    image_url = models.URLField(blank=True, null=True)                             # ✅ or URL
+
+    image = models.ImageField(upload_to='event_images/', blank=True, null=True)
+    image_url = models.URLField(blank=True, null=True)
 
     price = models.CharField(max_length=100)
     capacity = models.CharField(max_length=100)
@@ -39,11 +33,10 @@ class Event(models.Model):
     def get_main_image(self):
         return self.image.url if self.image else self.image_url
 
-
 class EventImage(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='images')
-    image_file = models.ImageField(upload_to='event_images/gallery/', blank=True, null=True)  # ✅ upload
-    image_url = models.URLField(blank=True, null=True)                                        # ✅ or URL
+    image_file = models.ImageField(upload_to='event_images/gallery/', blank=True, null=True)
+    image_url = models.URLField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.event.title} - Image"

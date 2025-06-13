@@ -1,12 +1,9 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import ContactMessageViewSet
+from .views import ContactMessageViewSet, EventViewSet
 
 router = DefaultRouter()
 router.register(r'contact', ContactMessageViewSet, basename='contact')
-from .views import EventViewSet
-
-router = DefaultRouter()
 router.register(r'events', EventViewSet, basename='events')
 
 urlpatterns = [

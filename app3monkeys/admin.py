@@ -1,9 +1,5 @@
 from django.contrib import admin
-from .models import Event, EventImage
-
-# Register your models here.
-from django.contrib import admin
-from .models import ContactMessage
+from .models import ContactMessage, Event, EventImage
 
 @admin.register(ContactMessage)
 class ContactMessageAdmin(admin.ModelAdmin):
