@@ -10,6 +10,6 @@ class EventImageInline(admin.TabularInline):
     extra = 1
 
 @admin.register(Event)
-class EventAdmin(admin.ModelAdmin):
+class EventAdmin(admin
     inlines = [EventImageInline]
     list_display = ('title', 'type', 'date')

@@ -22,10 +22,8 @@ class Event(models.Model):
 
     price = models.CharField(max_length=100)
     capacity = models.CharField(max_length=100)
-    amenities = models.JSONField(default=list)
     contact = models.EmailField()
     phone = models.CharField(max_length=20)
-    highlights = models.JSONField(default=list)
 
     def __str__(self):
         return self.title
