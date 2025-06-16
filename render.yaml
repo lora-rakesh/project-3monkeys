@@ -15,4 +15,5 @@ services:
           property: connectionString
 databases:
   - name: project3monkeys
-    plan: free
+    plan: free
+
