@@ -33,7 +33,6 @@ class EventImageSerializer(serializers.ModelSerializer):
     def get_image(self, obj):
         return obj.get_image()
 
-
 class EventSerializer(serializers.ModelSerializer):
     images = EventImageSerializer(many=True, read_only=True)
     main_image = serializers.SerializerMethodField()

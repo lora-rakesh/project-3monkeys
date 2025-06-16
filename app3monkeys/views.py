@@ -11,8 +11,7 @@ from .serializers import BooknowSerializer
 class ContactMessageViewSet(viewsets.ModelViewSet):
     queryset = ContactMessage.objects.all()
     serializer_class = ContactMessageSerializer
-    http_method_names = ['post', 'get']  # allow 'get' too for admin debugging
-
+    http_method_names = ['post', 'get']
 
 class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()

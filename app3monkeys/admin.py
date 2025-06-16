@@ -1,9 +1,5 @@
 from django.contrib import admin
-from .models import Event, EventImage
-
-# Register your models here.
-from django.contrib import admin
-from .models import ContactMessage
+from .models import ContactMessage, Event, EventImage
 
 @admin.register(ContactMessage)
 class ContactMessageAdmin(admin.ModelAdmin):
@@ -14,6 +10,6 @@ class EventImageInline(admin.TabularInline):
     extra = 1
 
 @admin.register(Event)
-class EventAdmin(admin.ModelAdmin):
+class EventAdmin(admin.ModelAdmin):  # ✅ Correct base class
     inlines = [EventImageInline]
     list_display = ('title', 'type', 'date')
