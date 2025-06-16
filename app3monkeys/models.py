@@ -20,10 +20,8 @@ class Event(models.Model):
     date = models.DateField()
     location = models.CharField(max_length=255)
     description = models.TextField()
-
     image = models.ImageField(upload_to='event_images/', blank=True, null=True)
     image_url = models.URLField(blank=True, null=True)
-
     price = models.CharField(max_length=100)
     capacity = models.CharField(max_length=100)
     amenities = models.TextField(blank=True, null=True)
@@ -74,10 +72,6 @@ class Activity(models.Model):
 
     def __str__(self):
         return self.title
-
-
-
-from django.db import models
 
 class CustomerReview(models.Model):
     name = models.CharField(max_length=100)

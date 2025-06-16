@@ -1,8 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import ContactMessageViewSet, EventViewSet, LoginViewSet, CustomerReviewViewSet
-from .views import BooknowViewSet, ActivityViewSet
-from .views import RegisterViewSet
+from .views import ContactMessageViewSet, EventViewSet, LoginViewSet, CustomerReviewViewSet, BooknowViewSet, ActivityViewSet, RegisterViewSet
 
 router = DefaultRouter()
 router.register(r'contact', ContactMessageViewSet, basename='contact')
