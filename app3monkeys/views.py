@@ -25,13 +25,13 @@ class EventViewSet(viewsets.ModelViewSet):
 class LoginViewSet(viewsets.ModelViewSet):
     queryset = LoginEntry.objects.all()
     serializer_class = LoginSerializer
-    http_method_names = ['post']
+    http_method_names = ['post','get']
 
 
 class BooknowViewSet(viewsets.ModelViewSet):
     queryset = Booknow.objects.all()
     serializer_class = BooknowSerializer
-    http_method_names = ['post']  # Only allow POST (book now)
+    http_method_names = ['post','get']  # Only allow POST (book now)
 class ActivityViewSet(viewsets.ModelViewSet):
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
