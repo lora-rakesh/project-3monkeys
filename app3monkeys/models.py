@@ -74,3 +74,17 @@ class Activity(models.Model):
 
     def __str__(self):
         return self.title
+
+
+
+from django.db import models
+
+class CustomerReview(models.Model):
+    name = models.CharField(max_length=100)
+    rating = models.IntegerField(default=0)  # from 1 to 5
+    date = models.DateField(auto_now_add=True)  # sets current date automatically
+    review = models.TextField()
+
+    def __str__(self):
+        return f"{self.name} - {self.rating}★"
+

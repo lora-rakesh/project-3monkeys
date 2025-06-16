@@ -51,3 +51,18 @@ class ActivitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Activity
         fields = '__all__'
+
+
+
+from rest_framework import serializers
+from .models import CustomerReview
+
+class CustomerReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomerReview
+        fields = ['id', 'name', 'rating', 'date', 'review']
+        read_only_fields = ['date']  # prevent manual override
+
+
+
+

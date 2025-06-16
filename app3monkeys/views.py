@@ -35,3 +35,19 @@ class BooknowViewSet(viewsets.ModelViewSet):
 class ActivityViewSet(viewsets.ModelViewSet):
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
+
+
+from rest_framework import viewsets
+from .models import CustomerReview
+from .serializers import CustomerReviewSerializer
+
+class CustomerReviewViewSet(viewsets.ModelViewSet):
+    queryset = CustomerReview.objects.all().order_by('-date')
+    serializer_class = CustomerReviewSerializer
+    http_method_names = ['get', 'post']
+
+
+
+
+
+
