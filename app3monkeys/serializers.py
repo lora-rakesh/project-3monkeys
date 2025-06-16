@@ -42,7 +42,7 @@ class EventSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'title', 'type', 'subtype', 'date', 'location',
             'description', 'image', 'image_url', 'main_image',
-            'price', 'capacity', 'amenities' 'contact', 'phone', 'images'
+            'price', 'capacity', 'amenities', 'contact', 'phone', 'images', 'highlights'
         ]
 
     def get_main_image(self, obj):

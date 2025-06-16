@@ -73,7 +73,7 @@ WSGI_APPLICATION = 'project3monkeys.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=config('DATABASE_URL'),
+        default='postgresql://project3monkeys_user:SViBDzcHsAisYQa9K5p22PkA8E3obxKd@dpg-d17qb43uibrs7380h00g-a.oregon-postgres.render.com/project3monkeys',
         conn_max_age=600,
         ssl_require=True
     )
