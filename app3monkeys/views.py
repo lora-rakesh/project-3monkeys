@@ -7,6 +7,7 @@ from .models import ContactMessage
 from .serializers import ContactMessageSerializer
 from .models import Booknow
 from .serializers import BooknowSerializer
+import math
 
 class ContactMessageViewSet(viewsets.ModelViewSet):
     queryset = ContactMessage.objects.all()
