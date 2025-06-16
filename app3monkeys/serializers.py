@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import ContactMessage
 from .models import Event, EventImage
 from .models import LoginEntry
-from .models import Booknow
+from .models import Booknow, Activity
 
 class LoginSerializer(serializers.ModelSerializer):
     class Meta:
@@ -47,3 +47,7 @@ class EventSerializer(serializers.ModelSerializer):
 
     def get_main_image(self, obj):
         return obj.get_main_image()
+class ActivitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Activity
+        fields = '__all__'

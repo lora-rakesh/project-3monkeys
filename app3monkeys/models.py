@@ -60,3 +60,17 @@ class Booknow(models.Model):
 
     def __str__(self):
         return f"Booking by {self.full_name}"
+from django.db import models
+
+class Activity(models.Model):
+    title = models.CharField(max_length=255)
+    type = models.CharField(max_length=100)
+    category = models.CharField(max_length=100)
+    location = models.CharField(max_length=255)
+    description = models.TextField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
+    image = models.ImageField(upload_to='activity_images/', blank=True, null=True)
+
+    def __str__(self):
+        return self.title

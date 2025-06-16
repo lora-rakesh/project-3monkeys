@@ -7,6 +7,9 @@ from .models import ContactMessage
 from .serializers import ContactMessageSerializer
 from .models import Booknow
 from .serializers import BooknowSerializer
+from .models import Activity
+from .serializers import ActivitySerializer
+
 import math
 
 class ContactMessageViewSet(viewsets.ModelViewSet):
@@ -29,3 +32,6 @@ class BooknowViewSet(viewsets.ModelViewSet):
     queryset = Booknow.objects.all()
     serializer_class = BooknowSerializer
     http_method_names = ['post']  # Only allow POST (book now)
+class ActivityViewSet(viewsets.ModelViewSet):
+    queryset = Activity.objects.all()
+    serializer_class = ActivitySerializer
