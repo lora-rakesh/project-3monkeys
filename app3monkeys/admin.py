@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ContactMessage, Event, EventImage, LoginEntry, Booknow, Activity
+from .models import ContactMessage, Event, EventImage, LoginEntry, Booknow, Activity, CustomerReview
 
 class ContactMessageAdmin(admin.ModelAdmin):
     list_display = ('name', 'email', 'submitted_at')  # fields to show in list view
@@ -19,3 +19,4 @@ admin.site.register(EventImage)
 admin.site.register(ContactMessage)
 admin.site.register(LoginEntry)
 admin.site.register(Activity)
+admin.site.register(CustomerReview)
