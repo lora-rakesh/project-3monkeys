@@ -29,7 +29,7 @@ class Event(models.Model):
     amenities = models.TextField(blank=True, null=True)
     contact = models.EmailField()
     phone = models.CharField(max_length=20)
-    
+    highlights = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.title
