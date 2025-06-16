@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from .models import Event
 from .serializers import EventSerializer
 from .models import LoginEntry
@@ -9,6 +9,11 @@ from .models import Booknow
 from .serializers import BooknowSerializer
 from .models import Activity
 from .serializers import ActivitySerializer
+from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework import viewsets, status
 
 import math
 
@@ -31,7 +36,15 @@ class LoginViewSet(viewsets.ModelViewSet):
 class BooknowViewSet(viewsets.ModelViewSet):
     queryset = Booknow.objects.all()
     serializer_class = BooknowSerializer
-    http_method_names = ['post','get']  # Only allow POST (book now)
+    http_method_names = ['post','get']  
 class ActivityViewSet(viewsets.ModelViewSet):
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
+from .serializers import RegisterSerializer
+
+class RegisterViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()  # ✅ Required for ModelViewSet
+    serializer_class = RegisterSerializer
+    http_method_names = ['post']
+    permission_classes = [permissions.AllowAny]  # ✅ Allow public access to register
+
