@@ -3,6 +3,9 @@ from django.db import models
 
 class LoginEntry(models.Model):
     email = models.EmailField()
+
+    def __str__(self):
+        return f"{self.email}"
     
 class ContactMessage(models.Model):
     name = models.CharField(max_length=100)
