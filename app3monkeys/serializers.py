@@ -1,12 +1,27 @@
 from rest_framework import serializers
 from .models import ContactMessage
+from .models import Event, EventImage
+from .models import LoginEntry
+from .models import Booknow
+
+class LoginSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LoginEntry
+        fields = ['email']
+
+
+class BooknowSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Booknow
+        fields = '__all__'
+
 
 class ContactMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactMessage
         fields = ['id', 'name', 'email', 'message', 'submitted_at']
         read_only_fields = ['id', 'submitted_at']
-from .models import Event, EventImage
+
 
 class EventImageSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
