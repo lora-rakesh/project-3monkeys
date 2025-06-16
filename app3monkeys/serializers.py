@@ -1,20 +1,16 @@
 from rest_framework import serializers
-from .models import ContactMessage
-from .models import Event, EventImage
-from .models import LoginEntry
-from .models import Booknow, Activity
+from .models import ContactMessage, Event, EventImage, LoginEntry, Booknow, Activity, CustomerReview
+from django.contrib.auth.models import User
 
 class LoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = LoginEntry
         fields = ['email']
 
-
 class BooknowSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booknow
         fields = '__all__'
-
 
 class ContactMessageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,10 +18,8 @@ class ContactMessageSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'email', 'message', 'submitted_at']
         read_only_fields = ['id', 'submitted_at']
 
-
 class EventImageSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
-
     class Meta:
         model = EventImage
         fields = ['id', 'image_file', 'image_url', 'image']
@@ -47,11 +41,11 @@ class EventSerializer(serializers.ModelSerializer):
 
     def get_main_image(self, obj):
         return obj.get_main_image()
+    
 class ActivitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Activity
         fields = '__all__'
-from django.contrib.auth.models import User
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -75,12 +69,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         validated_data.pop('confirm_password')
         user = User.objects.create_user(**validated_data)
         return user
-
-
-
-
-from rest_framework import serializers
-from .models import CustomerReview
 
 class CustomerReviewSerializer(serializers.ModelSerializer):
     class Meta:
