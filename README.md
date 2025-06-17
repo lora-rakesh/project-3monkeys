@@ -5,6 +5,14 @@
 ---
 
 ## Features Implemented
+-  Role-based access (Vendor & Customer)
+-  Property Listing and Filtering
+-  Availability Calendar for Bookings
+-  Booking System with Price Calculation
+-  Wishlist Functionality
+-  Customer Reviews
+-  File/Image Uploads
+-  Scalable and API-ready Architecture
 
 ### APIs Available
 - `Activities API`
@@ -229,3 +237,8 @@ GitHub Repository (Code must be pushed here)
 **Post Deployment**
 Test all major API endpoints ( /api/login/, /api/contact/, /api/events/, /api/book-now/ etc.)
 
+MIT License
+
+Copyright (c) 2025 LoRa IT INNOVATIONS
+
+Permission is hereby granted, free of charge, to any person obtaining a copy...

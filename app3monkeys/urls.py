@@ -11,8 +11,6 @@ router.register(r'activities', ActivityViewSet, basename='activity')
 router.register(r'signup', RegisterViewSet, basename='signup')
 router.register(r'reviews', CustomerReviewViewSet, basename='reviews')
 
-
-
 urlpatterns = [
     path('api/', include(router.urls)),
 ]
