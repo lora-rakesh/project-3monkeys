@@ -5,6 +5,16 @@
 ---
 
 ## Features Implemented
+-  JWT Authentication (Login / Register)
+-  Role-based access (Vendor & Customer)
+-  Property Listing and Filtering
+-  Availability Calendar for Bookings
+-  Booking System with Price Calculation
+-  Wishlist Functionality
+-  Customer Reviews
+-  File/Image Uploads
+-  Admin & Vendor Dashboards (customizable)
+-  Scalable and API-ready Architecture
 
 ### APIs Available
 - `Activities API`
