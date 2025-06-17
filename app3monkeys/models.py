@@ -82,5 +82,5 @@ class CustomerReview(models.Model):
     review = models.TextField()
 
     def __str__(self):
-        return f"{self.name} - {self.rating}★"
+        return f"{self.name} - {self.rating}"
 
