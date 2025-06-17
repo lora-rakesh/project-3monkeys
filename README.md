@@ -42,9 +42,9 @@ git clone https://github.com/yourusername/3monkeys-backend.git
 cd 3monkeys-backend
 ## Installation and Setup Instructions
 2. Create Project Directory
-   ```bash
-   mkdir monkeysdata
-   cd monkeysdata
+```
+mkdir monkeysdata
+cd monkeysdata
 
 3. **Set Up a Virtual Environment**
    ```bash
