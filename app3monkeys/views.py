@@ -30,10 +30,10 @@ class ActivityViewSet(viewsets.ModelViewSet):
     serializer_class = ActivitySerializer
 
 class RegisterViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()  # ✅ Required for ModelViewSet
+    queryset = User.objects.all()  # Required for ModelViewSet
     serializer_class = RegisterSerializer
     http_method_names = ['post']
-    permission_classes = [permissions.AllowAny]  # ✅ Allow public access to register
+    permission_classes = [permissions.AllowAny]  # Allow public access to register
 
 class CustomerReviewViewSet(viewsets.ModelViewSet):
     queryset = CustomerReview.objects.all().order_by('-date')

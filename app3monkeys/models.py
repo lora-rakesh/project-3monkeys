@@ -50,7 +50,6 @@ class EventImage(models.Model):
         return self.image_file.url if self.image_file else self.image_url
 
 
-# models.py
 class Booknow(models.Model):
     full_name = models.CharField(max_length=100)
     email = models.EmailField()
