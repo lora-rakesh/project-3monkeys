@@ -8,7 +8,7 @@ router.register(r'login', LoginViewSet, basename='login')
 router.register(r'events', EventViewSet, basename='events')
 router.register(r'book-now', BooknowViewSet, basename='book-now')
 router.register(r'activities', ActivityViewSet, basename='activity')
-router.register(r'register', RegisterViewSet, basename='register')
+router.register(r'signup', RegisterViewSet, basename='signup')
 router.register(r'reviews', CustomerReviewViewSet, basename='reviews')
 
 

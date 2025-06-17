@@ -3,6 +3,9 @@ from django.db import models
 
 class LoginEntry(models.Model):
     email = models.EmailField()
+
+    def __str__(self):
+        return f"{self.email}"
     
 class ContactMessage(models.Model):
     name = models.CharField(max_length=100)
@@ -58,8 +61,7 @@ class Booknow(models.Model):
 
     def __str__(self):
         return f"Booking by {self.full_name}"
-from django.db import models
-
+    
 class Activity(models.Model):
     title = models.CharField(max_length=255)
     type = models.CharField(max_length=100)
