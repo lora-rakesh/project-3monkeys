@@ -227,5 +227,5 @@ GitHub Repository (Code must be pushed here)
  - Then Deploy
 
 **Post Deployment**
-Test all major API endpoints (/api/register/, /api/token/, etc.)
+Test all major API endpoints ( /api/login/, /api/contact/, /api/events/, /api/book-now/ etc.)
 
