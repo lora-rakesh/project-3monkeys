@@ -80,6 +80,9 @@ from rest_framework import serializers
 from .models import ActivityDetails
 
 class ActivityDetailsSerializer(serializers.ModelSerializer):
+    activity = serializers.PrimaryKeyRelatedField(queryset=Activity.objects.all())
+
     class Meta:
         model = ActivityDetails
-        fields = '__all__'  # includes: activity, title, date, guests, specialRequests, userId
+        fields = '__all__'
+

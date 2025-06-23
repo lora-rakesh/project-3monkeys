@@ -71,3 +71,4 @@ class ActivityDetailsViewSet(viewsets.ModelViewSet):
     serializer_class = ActivityDetailsSerializer
 
 
+
