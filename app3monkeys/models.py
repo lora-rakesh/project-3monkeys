@@ -89,21 +89,3 @@ class CustomerReview(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.rating}"
-
-#  ACTIVITY DETAILS 
-class Activitydetails(models.Model):
-    title = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.title
-
-# BOOKING DETAILS 
-class BookingDetail(models.Model):
-    activity = models.ForeignKey(Activitydetails, on_delete=models.CASCADE, related_name='bookings')
-    date = models.DateField()
-    guests = models.IntegerField()
-    specialRequests = models.TextField(blank=True)
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-
-    def __str__(self):
-        return f"{self.activity.title} - {self.date}"

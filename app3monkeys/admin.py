@@ -20,18 +20,3 @@ admin.site.register(ContactMessage)
 admin.site.register(LoginEntry)
 admin.site.register(Activity)
 admin.site.register(CustomerReview)
-
-
-from django.contrib import admin
-from .models import Activitydetails, BookingDetail
-
-@admin.register(Activitydetails)
-class ActivitydetailsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title')
-    search_fields = ('title',)
-
-@admin.register(BookingDetail)
-class BookingDetailAdmin(admin.ModelAdmin):
-    list_display = ('id', 'activity', 'date', 'guests', 'user')
-    list_filter = ('activity', 'date')
-    search_fields = ('specialRequests', 'user__username')
