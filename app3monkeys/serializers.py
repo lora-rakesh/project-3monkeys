@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import ContactMessage, Event, EventImage, LoginEntry, Booknow, Activity, CustomerReview
 from django.contrib.auth.models import User
+from .models import BookingDetail
 
 class LoginSerializer(serializers.ModelSerializer):
     class Meta:
@@ -75,4 +76,44 @@ class CustomerReviewSerializer(serializers.ModelSerializer):
         model = CustomerReview
         fields = ['id', 'name', 'rating', 'date', 'review']
         read_only_fields = ['date']  # prevent manual override
+
+
+from .models import Activitydetails, BookingDetail
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+class ActivityDetailsSerializer(serializers.Serializer):
+    activityId = serializers.IntegerField(write_only=True)
+    title = serializers.CharField(read_only=True)
+    date = serializers.DateField()
+    guests = serializers.IntegerField()
+    specialRequests = serializers.CharField()
+    userId = serializers.IntegerField(required=False)
+
+    def create(self, validated_data):
+        # Extract foreign keys
+        activity_id = validated_data.pop('activityId')
+        user_id = validated_data.pop('userId', None)
+
+        # Resolve related objects
+        activity = Activitydetails.objects.get(id=activity_id)
+        user = User.objects.get(id=user_id) if user_id else None
+
+        # Create and return BookingDetail
+        return BookingDetail.objects.create(
+            activity=activity,
+            user=user,
+            **validated_data
+        )
+
+    def to_representation(self, instance):
+        return {
+            'activityId': instance.activity.id,
+            'title': instance.activity.title,
+            'date': instance.date,
+            'guests': instance.guests,
+            'specialRequests': instance.specialRequests,
+            'userId': instance.user.id if instance.user else None
+        }
 

@@ -4,6 +4,9 @@ from .serializers import EventSerializer, LoginSerializer, ContactMessageSeriali
 from django.contrib.auth.models import User
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from .models import BookingDetail
+from .serializers import ActivityDetailsSerializer
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 
 class ContactMessageViewSet(viewsets.ModelViewSet):
@@ -41,6 +44,9 @@ class CustomerReviewViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', 'post']
 
 
+class ActivityDetailsViewSet(viewsets.ModelViewSet):
+    queryset = BookingDetail.objects.select_related('activity', 'user').all()
+    serializer_class = ActivityDetailsSerializer
 
 
 
