@@ -79,8 +79,8 @@ class CustomerReviewSerializer(serializers.ModelSerializer):
 
 
 class ActivityDetailsSerializer(serializers.ModelSerializer):
-    activity = serializers.PrimaryKeyRelatedField(queryset=Activity.objects.all())
+    activityId= serializers.PrimaryKeyRelatedField(queryset=Activity.objects.all())
 
     class Meta:
         model = ActivityDetails
-        fields = ['id', 'activity', 'title', 'date', 'guests', 'specialRequests', 'userId']
+        fields = '__all__'

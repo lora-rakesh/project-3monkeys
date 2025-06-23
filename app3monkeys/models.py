@@ -86,7 +86,8 @@ class Activity(models.Model):
     image_url = models.URLField(blank=True, null=True)
     
     def __str__(self):
-        return self.title
+        return str(self.id)  # ✅ Correct
+
 
 # CUSTOMER REVIEWS 
 class CustomerReview(models.Model):
@@ -107,5 +108,5 @@ class ActivityDetails(models.Model):
     userId = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
-        return f"{self.title or self.activity.title} on {self.date}"
+        return f"{self.id}"
 
