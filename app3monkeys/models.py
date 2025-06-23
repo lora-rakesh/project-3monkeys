@@ -35,7 +35,6 @@ class Event(models.Model):
     date = models.DateField()
     location = models.CharField(max_length=255)
     description = models.TextField()
-    image = models.ImageField(upload_to='event_images/', blank=True, null=True)
     image_url = models.URLField(blank=True, null=True)
     price = models.CharField(max_length=100)
     capacity = models.CharField(max_length=100)
@@ -46,9 +45,10 @@ class Event(models.Model):
 
     def __str__(self):
         return self.title
-
     def get_main_image(self):
-        return self.image.url if self.image else self.image_url
+        main_image = self.images.first()  # gets first related EventImage
+        return main_image.get_image() if main_image else self.image_url
+
 
 # EVENT IMAGES 
 class EventImage(models.Model):
@@ -60,7 +60,7 @@ class EventImage(models.Model):
         return f"{self.event.title} - Image"
 
     def get_image(self):
-        return self.image_file.url if self.image_file else self.image_url
+        return self.image_file.url 
 
 # BOOK NOW
 class Booknow(models.Model):
