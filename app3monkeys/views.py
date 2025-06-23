@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions, status
-from .models import Event, LoginEntry, ContactMessage, Booknow, Activity, CustomerReview
-from .serializers import EventSerializer, LoginSerializer, ContactMessageSerializer, BooknowSerializer, ActivitySerializer, RegisterSerializer, CustomerReviewSerializer
+from .models import Event, LoginEntry, ContactMessage, Booknow, Activity, CustomerReview, ActivityDetails
+from .serializers import EventSerializer, LoginSerializer, ContactMessageSerializer, ActivityDetailsSerializer, BooknowSerializer, ActivitySerializer, RegisterSerializer, CustomerReviewSerializer
 from django.contrib.auth.models import User
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -62,9 +62,7 @@ class CustomerReviewViewSet(viewsets.ModelViewSet):
     queryset = CustomerReview.objects.all().order_by('-date')
     serializer_class = CustomerReviewSerializer
     http_method_names = ['get', 'post']
-from rest_framework import viewsets
-from .models import ActivityDetails
-from .serializers import ActivityDetailsSerializer
+
 
 class ActivityDetailsViewSet(viewsets.ModelViewSet):
     queryset = ActivityDetails.objects.all()

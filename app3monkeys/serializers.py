@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ContactMessage, Event, EventImage, LoginEntry, Booknow, Activity, CustomerReview 
+from .models import ContactMessage, Event, EventImage, LoginEntry, Booknow, Activity, ActivityDetails, CustomerReview 
 from django.contrib.auth.models import User
 # app3monkeys/serializers.py
 
@@ -76,10 +76,11 @@ class CustomerReviewSerializer(serializers.ModelSerializer):
         model = CustomerReview
         fields = ['id', 'name', 'rating', 'date', 'review']
         read_only_fields = ['date']  # prevent manual override
-from rest_framework import serializers
-from .models import ActivityDetails
+
 
 class ActivityDetailsSerializer(serializers.ModelSerializer):
+    activity = serializers.PrimaryKeyRelatedField(queryset=Activity.objects.all())
+
     class Meta:
         model = ActivityDetails
-        fields = '__all__'  # includes: activity, title, date, guests, specialRequests, userId
+        fields = ['id', 'activity', 'title', 'date', 'guests', 'specialRequests', 'userId']
