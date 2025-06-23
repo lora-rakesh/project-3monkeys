@@ -14,8 +14,3 @@ router.register(r'Activitydetails', ActivityDetailsViewSet, basename='activityde
 urlpatterns = [
     path('api/', include(router.urls)),
 ]
-
-
-
-
-

@@ -1,8 +1,8 @@
-from django.contrib.auth.models import AbstractUser
 from django.db import models
-
-from django.db import models
+from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
+User = get_user_model()
+
 
 class LoginEntry(models.Model):
     email = models.EmailField(unique=True)
@@ -17,7 +17,7 @@ class LoginEntry(models.Model):
     def __str__(self):
         return self.email
 
-    
+# CONTACT MESSAGE
 class ContactMessage(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
@@ -27,6 +27,7 @@ class ContactMessage(models.Model):
     def __str__(self):
         return f"{self.name} - {self.email}"
 
+# EVENT
 class Event(models.Model):
     title = models.CharField(max_length=255)
     type = models.CharField(max_length=100)
@@ -49,6 +50,7 @@ class Event(models.Model):
     def get_main_image(self):
         return self.image.url if self.image else self.image_url
 
+# EVENT IMAGES 
 class EventImage(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='images')
     image_file = models.ImageField(upload_to='event_images/gallery/', blank=True, null=True)
@@ -60,7 +62,7 @@ class EventImage(models.Model):
     def get_image(self):
         return self.image_file.url if self.image_file else self.image_url
 
-
+# BOOK NOW
 class Booknow(models.Model):
     full_name = models.CharField(max_length=100)
     email = models.EmailField()
@@ -71,7 +73,8 @@ class Booknow(models.Model):
 
     def __str__(self):
         return f"Booking by {self.full_name}"
-    
+
+# ACTIVITIES 
 class Activity(models.Model):
     title = models.CharField(max_length=255)
     type = models.CharField(max_length=100)
@@ -81,14 +84,15 @@ class Activity(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
     image_url = models.URLField(blank=True, null=True)
-
+    
     def __str__(self):
         return self.title
 
+# CUSTOMER REVIEWS 
 class CustomerReview(models.Model):
     name = models.CharField(max_length=100)
-    rating = models.IntegerField(default=0)  # from 1 to 5
-    date = models.DateField(auto_now_add=True)  # sets current date automatically
+    rating = models.IntegerField(default=0)  # Range: 1 to 5
+    date = models.DateField(auto_now_add=True)
     review = models.TextField()
 
     def __str__(self):
@@ -104,3 +108,4 @@ class ActivityDetails(models.Model):
 
     def __str__(self):
         return f"{self.title or self.activity.title} on {self.date}"
+

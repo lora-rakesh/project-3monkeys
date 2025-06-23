@@ -6,6 +6,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 class ContactMessageViewSet(viewsets.ModelViewSet):
     queryset = ContactMessage.objects.all()
@@ -68,7 +69,5 @@ from .serializers import ActivityDetailsSerializer
 class ActivityDetailsViewSet(viewsets.ModelViewSet):
     queryset = ActivityDetails.objects.all()
     serializer_class = ActivityDetailsSerializer
-
-
 
 
