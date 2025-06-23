@@ -4,7 +4,8 @@ from .serializers import EventSerializer, LoginSerializer, ContactMessageSeriali
 from django.contrib.auth.models import User
 from rest_framework.decorators import action
 from rest_framework.response import Response
-
+from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import check_password
 
 class ContactMessageViewSet(viewsets.ModelViewSet):
     queryset = ContactMessage.objects.all()
@@ -15,10 +16,31 @@ class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
 
-class LoginViewSet(viewsets.ModelViewSet):
-    queryset = LoginEntry.objects.all()
+
+User = get_user_model()
+
+class LoginViewSet(viewsets.GenericViewSet):
     serializer_class = LoginSerializer
-    http_method_names = ['post','get']
+
+    def create(self, request):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            password = serializer.validated_data['password']
+
+            try:
+                user = User.objects.get(email=email)
+                if check_password(password, user.password):
+                    return Response({'message': 'Login successful'})
+                else:
+                    return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+            except User.DoesNotExist:
+                return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 class BooknowViewSet(viewsets.ModelViewSet):
     queryset = Booknow.objects.all()
@@ -39,8 +61,13 @@ class CustomerReviewViewSet(viewsets.ModelViewSet):
     queryset = CustomerReview.objects.all().order_by('-date')
     serializer_class = CustomerReviewSerializer
     http_method_names = ['get', 'post']
+from rest_framework import viewsets
+from .models import ActivityDetails
+from .serializers import ActivityDetailsSerializer
 
-
+class ActivityDetailsViewSet(viewsets.ModelViewSet):
+    queryset = ActivityDetails.objects.all()
+    serializer_class = ActivityDetailsSerializer
 
 
 

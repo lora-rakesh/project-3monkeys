@@ -1,11 +1,22 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from django.db import models
+from django.contrib.auth.hashers import make_password
+
 class LoginEntry(models.Model):
-    email = models.EmailField()
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=128)  # Store hashed passwords!
+
+    def save(self, *args, **kwargs):
+        # Hash password before saving
+        if not self.pk or 'password' in self.get_dirty_fields():
+            self.password = make_password(self.password)
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.email}"
+        return self.email
+
     
 class ContactMessage(models.Model):
     name = models.CharField(max_length=100)
@@ -69,7 +80,7 @@ class Activity(models.Model):
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
-    image = models.ImageField(upload_to='activity_images/', blank=True, null=True)
+    image_url = models.URLField(blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -83,3 +94,13 @@ class CustomerReview(models.Model):
     def __str__(self):
         return f"{self.name} - {self.rating}"
 
+class ActivityDetails(models.Model):
+    activity = models.ForeignKey(Activity, on_delete=models.CASCADE, related_name='details')
+    title = models.CharField(max_length=100, blank=True)
+    date = models.DateField()
+    guests = models.PositiveIntegerField()
+    specialRequests = models.TextField(blank=True)
+    userId = models.CharField(max_length=100, blank=True)
+
+    def __str__(self):
+        return f"{self.title or self.activity.title} on {self.date}"
