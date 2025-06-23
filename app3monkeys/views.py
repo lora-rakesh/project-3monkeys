@@ -16,8 +16,7 @@ class ContactMessageViewSet(viewsets.ModelViewSet):
 class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
-
-
+    http_method_names = ['get', 'post', 'delete']
 User = get_user_model()
 
 class LoginViewSet(viewsets.GenericViewSet):
@@ -51,7 +50,7 @@ class BooknowViewSet(viewsets.ModelViewSet):
 class ActivityViewSet(viewsets.ModelViewSet):
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
-
+    http_method_names = ['get', 'post', 'delete']
 class RegisterViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()  # Required for ModelViewSet
     serializer_class = RegisterSerializer
@@ -61,7 +60,7 @@ class RegisterViewSet(viewsets.ModelViewSet):
 class CustomerReviewViewSet(viewsets.ModelViewSet):
     queryset = CustomerReview.objects.all().order_by('-date')
     serializer_class = CustomerReviewSerializer
-    http_method_names = ['get', 'post']
+    http_method_names = ['get', 'post', 'delete']
 
 class ActivityDetailsViewSet(viewsets.ModelViewSet):
     queryset = ActivityDetails.objects.all()
