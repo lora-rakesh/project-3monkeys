@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ContactMessage, Event, EventImage, LoginEntry, Booknow, Activity, ActivityDetails, CustomerReview 
+from .models import ContactMessage, Event, EventImage, Booknow, Activity, ActivityDetails, CustomerReview 
 from django.contrib.auth.models import User
 # app3monkeys/serializers.py
 

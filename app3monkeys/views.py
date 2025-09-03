@@ -1,5 +1,5 @@
 from rest_framework import viewsets, permissions, status
-from .models import Event, LoginEntry, ContactMessage, Booknow, Activity, ActivityDetails, CustomerReview
+from .models import Event,ContactMessage, Booknow, Activity, ActivityDetails, CustomerReview
 from .serializers import EventSerializer, LoginSerializer, ContactMessageSerializer,ActivityDetailsSerializer, BooknowSerializer, ActivitySerializer, RegisterSerializer, CustomerReviewSerializer
 from django.contrib.auth.models import User
 from rest_framework.decorators import action
@@ -9,83 +9,120 @@ from django.contrib.auth.hashers import check_password
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsAdminOrLimitedAccess
-
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from .permissions import IsAdminOrReadOnly, IsAdminOrReadWrite, IsAdminOrLimitedAccess
 class ContactMessageViewSet(viewsets.ModelViewSet):
-    queryset = ContactMessage.objects.all()
     serializer_class = ContactMessageSerializer
-    http_method_names = ['post', 'get']
-
-class EventViewSet(viewsets.ModelViewSet):
-    serializer_class = EventSerializer
-    permission_classes = [IsAuthenticated, IsAdminOrLimitedAccess]
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated, IsAdminOrReadWrite]
 
     def get_queryset(self):
         user = self.request.user
+        if user.is_staff:  # admin can see all messages
+            return ContactMessage.objects.all()
+        # normal user -> filter by their email
+        return ContactMessage.objects.filter(email=user.email)
 
-        if user.is_staff:  # or user.role == "admin"
-            return Event.objects.all()  # admin sees all events
-        else:
-            return Event.objects.filter(created_by=user)  # user sees only their events
+    def perform_create(self, serializer):
+        # auto-fill email from logged-in user (ignore what user sends)
+        serializer.save(email=self.request.user.email, name=self.request.user.username)
 
-
-from rest_framework_simplejwt.tokens import RefreshToken
+class EventViewSet(viewsets.ModelViewSet):
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+    permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+   
+from django.contrib.auth import get_user_model, authenticate
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from django.contrib.auth import get_user_model
-from django.contrib.auth.hashers import check_password
-from .serializers import LoginSerializer
-User = get_user_model()
-class LoginViewSet(viewsets.GenericViewSet):
-    serializer_class = LoginSerializer
+from rest_framework.permissions import AllowAny
+from rest_framework_simplejwt.tokens import RefreshToken
 
+from .serializers import LoginSerializer  # use your existing serializer
+
+User = get_user_model()
+
+
+class LoginViewSet(viewsets.ViewSet):
+    serializer_class = LoginSerializer
+    authentication_classes = []   # disable session/auth
+    permission_classes = [AllowAny]  # anyone can access
+
+    # POST /api/login/
     def create(self, request):
-        serializer = self.get_serializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         email = serializer.validated_data['email']
         password = serializer.validated_data['password']
 
         try:
-            user = User.objects.get(email=email)
+            user_obj = User.objects.get(email=email)
         except User.DoesNotExist:
-            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
-
-        if not check_password(password, user.password):
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
-        # ✅ generate JWT tokens
-        refresh = RefreshToken.for_user(user)
-        return Response({
-            'message': 'Login successful',
-            'refresh': str(refresh),
-            'access': str(refresh.access_token),
-        })
+        # authenticate uses username internally
+        user = authenticate(request, username=user_obj.username, password=password)
 
+        if user is not None:
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+                'message': 'Login successful',
+                'user': {
+                    'id': user.id,
+                    'username': user.username,
+                    'email': user.email,
+                }
+            }, status=status.HTTP_200_OK)
 
+        return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
-
+        
 class BooknowViewSet(viewsets.ModelViewSet):
-    queryset = Booknow.objects.all()
     serializer_class = BooknowSerializer
-    permission_classes = [IsAuthenticated, IsAdminOrLimitedAccess]
+    permission_classes = [IsAuthenticated, IsAdminOrReadWrite]
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_staff:  # admin sees all bookings
+            return Booknow.objects.all()
+        return Booknow.objects.filter(email=user.email)  # normal user -> only their bookings
+
+    def perform_create(self, serializer):
+        serializer.save(email=self.request.user.email)  # auto-fill user email
 
 class ActivityViewSet(viewsets.ModelViewSet):
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
-    permission_classes = [IsAuthenticated, IsAdminOrLimitedAccess]
+    permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
 class RegisterViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()  # Required for ModelViewSet
     serializer_class = RegisterSerializer
-    http_method_names = ['post']
-    permission_classes = [IsAuthenticated, IsAdminOrLimitedAccess]  # Allow public access to register
-
+    permission_classes = permission_classes = [permissions.AllowAny ]  # Allow public access to register
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    http_method_names = ['post']  # Only allow POST and GET methods
 class CustomerReviewViewSet(viewsets.ModelViewSet):
     queryset = CustomerReview.objects.all().order_by('-date')
     serializer_class = CustomerReviewSerializer
-    permission_classes = [IsAuthenticated, IsAdminOrLimitedAccess]
-
+    permission_classes = [IsAuthenticated, IsAdminOrReadWrite]
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
 class ActivityDetailsViewSet(viewsets.ModelViewSet):
-    queryset = ActivityDetails.objects.all()
     serializer_class = ActivityDetailsSerializer
-    permission_classes = [IsAuthenticated, IsAdminOrLimitedAccess]
+    permission_classes = [IsAuthenticated, IsAdminOrReadWrite]
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_staff:  # admin sees all activities
+            return ActivityDetails.objects.all()
+        # normal user -> only see their activities
+        return ActivityDetails.objects.filter(userId=user.id)
+
+    def perform_create(self, serializer):
+        serializer.save(userId=self.request.user.id)  # auto-assign logged-in user ID
 

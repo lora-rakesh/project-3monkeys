@@ -1,21 +1,9 @@
 from django.db import models
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 User = get_user_model()
 
-
-class LoginEntry(models.Model):
-    email = models.EmailField(unique=True)
-    password = models.CharField(max_length=128)  # Store hashed passwords!
-
-    def save(self, *args, **kwargs):
-        # Hash password before saving
-        if not self.pk or 'password' in self.get_dirty_fields():
-            self.password = make_password(self.password)
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.email
 
 # CONTACT MESSAGE
 class ContactMessage(models.Model):

@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
     'rest_framework_simplejwt',
     'app3monkeys',
     'corsheaders',
@@ -72,11 +73,10 @@ WSGI_APPLICATION = 'project3monkeys.wsgi.application'
 
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default='postgresql://project3monkeys_user:SViBDzcHsAisYQa9K5p22PkA8E3obxKd@dpg-d17qb43uibrs7380h00g-a.oregon-postgres.render.com/project3monkeys',
-        conn_max_age=600,
-        ssl_require=True
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
 # Password validation
@@ -134,17 +134,18 @@ MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 
 CORS_ALLOW_ALL_ORIGINS = True  # change in production
 
+# settings.py
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ]
-
-}
-REST_FRAMEWORK = {
+        'rest_framework.authentication.SessionAuthentication',  # For browser login
+        'rest_framework.authentication.BasicAuthentication',    # For basic auth
+        'rest_framework_simplejwt.authentication.JWTAuthentication',  # For JWT tokens
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',  # Or your custom permission
+    ],
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer',  # required for HTML view
+        'rest_framework.renderers.BrowsableAPIRenderer',  # Required for browsable API
     ],
 }
-
