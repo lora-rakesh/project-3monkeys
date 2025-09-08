@@ -6,12 +6,12 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.permissions import IsAuthenticated
-from .permissions import IsAdminOrLimitedAccess
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from .permissions import IsAdminOrReadOnly, IsAdminOrReadWrite, IsAdminOrLimitedAccess
-from rest_framework_simplejwt.authentication import JWTAuthentication
+from django.contrib.auth import  authenticate
+from rest_framework.permissions import AllowAny
+from rest_framework_simplejwt.tokens import RefreshToken
+from .permissions import IsAdminOrReadOnly, IsAdminOrReadWrite
+
 
 class ContactMessageViewSet(viewsets.ModelViewSet):
     serializer_class = ContactMessageSerializer
@@ -32,15 +32,7 @@ class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
     permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
-
-   
-from django.contrib.auth import get_user_model, authenticate
-from rest_framework import viewsets, status
-from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
-from rest_framework_simplejwt.tokens import RefreshToken
-
-from .serializers import LoginSerializer  # use your existing serializer
+ # use your existing serializer
 
 User = get_user_model()
 
@@ -68,6 +60,13 @@ class LoginViewSet(viewsets.ViewSet):
 
         if user is not None:
             refresh = RefreshToken.for_user(user)
+
+            # Determine role
+            if user.is_superuser or user.is_staff:
+                role = "admin"
+            else:
+                role = "user"
+
             return Response({
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
@@ -76,6 +75,7 @@ class LoginViewSet(viewsets.ViewSet):
                     'id': user.id,
                     'username': user.username,
                     'email': user.email,
+                    'role': role,
                 }
             }, status=status.HTTP_200_OK)
 
