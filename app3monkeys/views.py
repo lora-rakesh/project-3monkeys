@@ -11,9 +11,10 @@ from rest_framework.permissions import IsAuthenticated
 from .permissions import IsAdminOrLimitedAccess
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from .permissions import IsAdminOrReadOnly, IsAdminOrReadWrite, IsAdminOrLimitedAccess
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
 class ContactMessageViewSet(viewsets.ModelViewSet):
     serializer_class = ContactMessageSerializer
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated, IsAdminOrReadWrite]
 
     def get_queryset(self):
@@ -31,7 +32,7 @@ class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
     permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
+
    
 from django.contrib.auth import get_user_model, authenticate
 from rest_framework import viewsets, status
@@ -84,7 +85,7 @@ class LoginViewSet(viewsets.ViewSet):
 class BooknowViewSet(viewsets.ModelViewSet):
     serializer_class = BooknowSerializer
     permission_classes = [IsAuthenticated, IsAdminOrReadWrite]
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
+
 
     def get_queryset(self):
         user = self.request.user
@@ -99,22 +100,22 @@ class ActivityViewSet(viewsets.ModelViewSet):
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
     permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
+
 class RegisterViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()  # Required for ModelViewSet
     serializer_class = RegisterSerializer
     permission_classes = permission_classes = [permissions.AllowAny ]  # Allow public access to register
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
-    http_method_names = ['post']  # Only allow POST and GET methods
+    http_method_names = ['post'] 
+     # Only allow POST and GET methods
 class CustomerReviewViewSet(viewsets.ModelViewSet):
     queryset = CustomerReview.objects.all().order_by('-date')
     serializer_class = CustomerReviewSerializer
     permission_classes = [IsAuthenticated, IsAdminOrReadWrite]
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    
 class ActivityDetailsViewSet(viewsets.ModelViewSet):
     serializer_class = ActivityDetailsSerializer
     permission_classes = [IsAuthenticated, IsAdminOrReadWrite]
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
+ 
 
     def get_queryset(self):
         user = self.request.user
