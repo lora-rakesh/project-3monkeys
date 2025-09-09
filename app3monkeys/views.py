@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions, status
-from .models import Event,ContactMessage, Booknow, Activity, ActivityDetails, CustomerReview
-from .serializers import EventSerializer, LoginSerializer, ContactMessageSerializer,ActivityDetailsSerializer, BooknowSerializer, ActivitySerializer, RegisterSerializer, CustomerReviewSerializer
+from .models import Event,ContactMessage, EventDetails,Booknow, Activity, ActivityDetails, CustomerReview
+from .serializers import EventSerializer, EventDetailsSerializer, LoginSerializer, ContactMessageSerializer,ActivityDetailsSerializer, BooknowSerializer, ActivitySerializer, RegisterSerializer, CustomerReviewSerializer
 from django.contrib.auth.models import User
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -126,4 +126,17 @@ class ActivityDetailsViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(userId=self.request.user.id)  # auto-assign logged-in user ID
+class EventDetailsViewSet(viewsets.ModelViewSet):
+    serializer_class = EventDetailsSerializer
+    permission_classes = [IsAuthenticated, IsAdminOrReadWrite]
+ 
 
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_staff:  # admin sees all events
+            return EventDetails.objects.all()
+        # normal user -> only see their events
+        return EventDetails.objects.filter(userId=user.id)
+
+    def perform_create(self, serializer):
+        serializer.save(userId=self.request.user.id)  # auto-assign logged-in user ID

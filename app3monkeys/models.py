@@ -98,3 +98,13 @@ class ActivityDetails(models.Model):
     def __str__(self):
         return f"{self.id}"
 
+class EventDetails(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='details')
+    title = models.CharField(max_length=100, blank=True)
+    date = models.DateField()
+    guests = models.PositiveIntegerField()
+    specialRequests = models.TextField(blank=True)
+    userId = models.CharField(max_length=100, blank=True)
+
+    def __str__(self):
+        return f"{self.id}"

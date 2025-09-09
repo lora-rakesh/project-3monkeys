@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ContactMessage, Event, EventImage, Booknow, Activity, ActivityDetails, CustomerReview 
+from .models import ContactMessage, Event, EventDetails,EventImage, Booknow, Activity, ActivityDetails, CustomerReview 
 from django.contrib.auth.models import User
 # app3monkeys/serializers.py
 
@@ -83,4 +83,10 @@ class ActivityDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ActivityDetails
+        fields = '__all__'
+class EventDetailsSerializer(serializers.ModelSerializer):
+    event= serializers.PrimaryKeyRelatedField(queryset=Event.objects.all())
+
+    class Meta:
+        model = EventDetails
         fields = '__all__'
