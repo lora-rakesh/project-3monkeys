@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ContactMessage, Event, EventDetails,EventImage, Booknow, Activity, ActivityDetails, CustomerReview 
+from .models import ContactMessage, Event, EventImage, Booknow, Activity,CustomerReview 
 from django.contrib.auth.models import User
 # app3monkeys/serializers.py
 
@@ -28,25 +28,48 @@ class EventImageSerializer(serializers.ModelSerializer):
     def get_image(self, obj):
         return obj.get_image()
 
+
+class EventDetailsSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Event
+        fields = [
+            "heading", "info", "passes", "special_requests",
+            "schedule", "performers", "ticket_includes",
+            "restrictions", "safety_guidelines",
+            "location_map", "faq","images",
+        ]
+
 class EventSerializer(serializers.ModelSerializer):
-    images = EventImageSerializer(many=True, read_only=True)
     main_image = serializers.SerializerMethodField()
+    more_details = EventDetailsSerializer(source="*", required=False)
 
     class Meta:
         model = Event
         fields = [
-            'id', 'title', 'type', 'subtype', 'date', 'location',
-            'description','image_url', 'main_image',
-            'price', 'capacity', 'amenities', 'contact', 'phone', 'images', 'highlights'
+            "id", "title", "type", "subtype", "date", "location",
+            "description", "image_url", "main_image",
+            "price", "capacity", "amenities", "contact", "phone",
+            "highlights",
+            "more_details",
         ]
 
     def get_main_image(self, obj):
         return obj.get_main_image()
-    
-class ActivitySerializer(serializers.ModelSerializer):
+class ActivityDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Activity
-        fields = '__all__'
+        fields = [
+            "heading", "info", "passes", "special_requests",
+            "schedule", "performers", "ticket_includes",
+            "restrictions", "safety_guidelines",
+            "location_map", "faq","images",
+        ]
+class ActivitySerializer(serializers.ModelSerializer):
+    more_details = ActivityDetailsSerializer(source="*", required=False)
+    class Meta:
+        model = Activity
+        fields = ["id", "title","category","location","description","price","rating","image_url","more_details",]
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -78,15 +101,4 @@ class CustomerReviewSerializer(serializers.ModelSerializer):
         read_only_fields = ['date']  # prevent manual override
 
 
-class ActivityDetailsSerializer(serializers.ModelSerializer):
-    activity= serializers.PrimaryKeyRelatedField(queryset=Activity.objects.all())
 
-    class Meta:
-        model = ActivityDetails
-        fields = '__all__'
-class EventDetailsSerializer(serializers.ModelSerializer):
-    event= serializers.PrimaryKeyRelatedField(queryset=Event.objects.all())
-
-    class Meta:
-        model = EventDetails
-        fields = '__all__'

@@ -31,16 +31,29 @@ class Event(models.Model):
     phone = models.CharField(max_length=20)
     highlights = models.TextField(blank=True, null=True)
 
+    heading = models.CharField(max_length=255, blank=True, null=True)
+    info = models.TextField(blank=True, null=True)
+    passes = models.TextField(blank=True, null=True)
+    special_requests = models.TextField(blank=True, null=True)
+    schedule = models.TextField(blank=True, null=True)
+    performers = models.TextField(blank=True, null=True)
+    ticket_includes = models.TextField(blank=True, null=True)
+    restrictions = models.TextField(blank=True, null=True)
+    safety_guidelines = models.TextField(blank=True, null=True)
+    location_map = models.URLField(blank=True, null=True)
+    faq = models.JSONField(blank=True, null=True)
+    images = models.URLField(blank=True, null=True)
+
     def __str__(self):
         return self.title
     def get_main_image(self):
-        main_image = self.images.first()  # gets first related EventImage
+        main_image = self.image.first()  # gets first related EventImage
         return main_image.get_image() if main_image else self.image_url
 
 
 # EVENT IMAGES 
 class EventImage(models.Model):
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='images')
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='image')
     image_file = models.ImageField(upload_to='event_images/gallery/', blank=True, null=True)
     image_url = models.URLField(blank=True, null=True)
 
@@ -72,6 +85,20 @@ class Activity(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
     image_url = models.URLField(blank=True, null=True)
+
+    heading = models.CharField(max_length=255, blank=True, null=True)
+    info = models.TextField(blank=True, null=True)
+    passes = models.TextField(blank=True, null=True)
+    special_requests = models.TextField(blank=True, null=True)
+    schedule = models.TextField(blank=True, null=True)
+    performers = models.TextField(blank=True, null=True)
+    ticket_includes = models.TextField(blank=True, null=True)
+    restrictions = models.TextField(blank=True, null=True)
+    safety_guidelines = models.TextField(blank=True, null=True)
+    location_map = models.URLField(blank=True, null=True)
+    faq = models.JSONField(blank=True, null=True)
+    images = models.URLField(blank=True, null=True)
+
     
     def __str__(self):
         return str(self.id)  # ✅ Correct
@@ -87,24 +114,4 @@ class CustomerReview(models.Model):
     def __str__(self):
         return f"{self.name} - {self.rating}"
 
-class ActivityDetails(models.Model):
-    activity = models.ForeignKey(Activity, on_delete=models.CASCADE, related_name='details')
-    title = models.CharField(max_length=100, blank=True)
-    date = models.DateField()
-    guests = models.PositiveIntegerField()
-    specialRequests = models.TextField(blank=True)
-    userId = models.CharField(max_length=100, blank=True)
 
-    def __str__(self):
-        return f"{self.id}"
-
-class EventDetails(models.Model):
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='details')
-    title = models.CharField(max_length=100, blank=True)
-    date = models.DateField()
-    guests = models.PositiveIntegerField()
-    specialRequests = models.TextField(blank=True)
-    userId = models.CharField(max_length=100, blank=True)
-
-    def __str__(self):
-        return f"{self.id}"
