@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ContactMessage, Event, EventImage, Booknow, Activity,CustomerReview 
+from .models import ContactMessage, Event, Booknow, Activity,CustomerReview 
 from django.contrib.auth.models import User
 # app3monkeys/serializers.py
 
@@ -8,10 +8,35 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)
 
 
+from rest_framework import serializers
+from .models import Booknow
+
 class BooknowSerializer(serializers.ModelSerializer):
+    selected_id = serializers.SerializerMethodField()
+    selected_name = serializers.SerializerMethodField()
+
     class Meta:
         model = Booknow
-        fields = '__all__'
+        fields = [
+            'id', 'full_name', 'email', 'phone', 'num_persons', 'special_requests', 'created_at',
+            'event', 'activity', 'selected_id', 'selected_name'
+        ]
+
+    def get_selected_id(self, obj):
+        if obj.event:
+            return obj.event.id
+        if obj.activity:
+            return obj.activity.id
+        return None
+
+    def get_selected_name(self, obj):
+        if obj.event:
+            return obj.event.title  # or name field for Event
+        if obj.activity:
+            return obj.activity.title
+        return None
+
+
 
 class ContactMessageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,14 +44,6 @@ class ContactMessageSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'email', 'message', 'submitted_at']
         read_only_fields = ['id', 'submitted_at']
 
-class EventImageSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField()
-    class Meta:
-        model = EventImage
-        fields = ['id', 'image_file', 'image_url', 'image']
-
-    def get_image(self, obj):
-        return obj.get_image()
 
 
 class EventDetailsSerializer(serializers.ModelSerializer):
@@ -39,23 +56,19 @@ class EventDetailsSerializer(serializers.ModelSerializer):
             "restrictions", "safety_guidelines",
             "location_map", "faq","images",
         ]
-
 class EventSerializer(serializers.ModelSerializer):
-    main_image = serializers.SerializerMethodField()
     more_details = EventDetailsSerializer(source="*", required=False)
 
     class Meta:
         model = Event
         fields = [
             "id", "title", "type", "subtype", "date", "location",
-            "description", "image_url", "main_image",
+            "description", "image_url",
             "price", "capacity", "amenities", "contact", "phone",
             "highlights",
             "more_details",
         ]
 
-    def get_main_image(self, obj):
-        return obj.get_main_image()
 class ActivityDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Activity

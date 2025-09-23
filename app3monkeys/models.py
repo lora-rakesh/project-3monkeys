@@ -23,7 +23,7 @@ class Event(models.Model):
     date = models.DateField()
     location = models.CharField(max_length=255)
     description = models.TextField()
-    image_url = models.URLField(blank=True, null=True)
+    image_url = models.ImageField(blank=True, null=True)
     price = models.CharField(max_length=100)
     capacity = models.CharField(max_length=100)
     amenities = models.TextField(blank=True, null=True)
@@ -41,8 +41,8 @@ class Event(models.Model):
     restrictions = models.TextField(blank=True, null=True)
     safety_guidelines = models.TextField(blank=True, null=True)
     location_map = models.URLField(blank=True, null=True)
-    faq = models.JSONField(blank=True, null=True)
-    images = models.URLField(blank=True, null=True)
+    faq = models.TextField(blank=True, null=True)
+    images = models.ImageField(blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -50,30 +50,6 @@ class Event(models.Model):
         main_image = self.image.first()  # gets first related EventImage
         return main_image.get_image() if main_image else self.image_url
 
-
-# EVENT IMAGES 
-class EventImage(models.Model):
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='image')
-    image_file = models.ImageField(upload_to='event_images/gallery/', blank=True, null=True)
-    image_url = models.URLField(blank=True, null=True)
-
-    def __str__(self):
-        return f"{self.event.title} - Image"
-
-    def get_image(self):
-        return self.image_file.url 
-
-# BOOK NOW
-class Booknow(models.Model):
-    full_name = models.CharField(max_length=100)
-    email = models.EmailField()
-    phone = models.CharField(max_length=15)
-    num_persons = models.IntegerField()
-    special_requests = models.TextField(blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Booking by {self.full_name}"
 
 # ACTIVITIES 
 class Activity(models.Model):
@@ -84,7 +60,7 @@ class Activity(models.Model):
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
-    image_url = models.URLField(blank=True, null=True)
+    image_url = models.ImageField(blank=True, null=True)
 
     heading = models.CharField(max_length=255, blank=True, null=True)
     info = models.TextField(blank=True, null=True)
@@ -96,12 +72,28 @@ class Activity(models.Model):
     restrictions = models.TextField(blank=True, null=True)
     safety_guidelines = models.TextField(blank=True, null=True)
     location_map = models.URLField(blank=True, null=True)
-    faq = models.JSONField(blank=True, null=True)
-    images = models.URLField(blank=True, null=True)
+    faq = models.TextField(blank=True, null=True)
+    images = models.ImageField(blank=True, null=True)
 
     
     def __str__(self):
-        return str(self.id)  # ✅ Correct
+        return self.title  # ✅ Correct
+
+# BOOK NOW
+class Booknow(models.Model):
+    full_name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=15)
+    num_persons = models.IntegerField()
+    special_requests = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    event = models.ForeignKey("Event", on_delete=models.CASCADE, related_name="bookings",null=True,blank=True)
+    activity = models.ForeignKey("Activity", on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return f"Booking by {self.full_name}"
+
+
 
 
 # CUSTOMER REVIEWS 
