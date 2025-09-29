@@ -42,7 +42,7 @@ class Event(models.Model):
     safety_guidelines = models.TextField(blank=True, null=True)
     location_map = models.URLField(blank=True, null=True)
     faq = models.TextField(blank=True, null=True)
-    images = models.ImageField(blank=True, null=True)
+
 
     def __str__(self):
         return self.title
@@ -73,7 +73,7 @@ class Activity(models.Model):
     safety_guidelines = models.TextField(blank=True, null=True)
     location_map = models.URLField(blank=True, null=True)
     faq = models.TextField(blank=True, null=True)
-    images = models.ImageField(blank=True, null=True)
+    
 
     
     def __str__(self):
@@ -105,5 +105,13 @@ class CustomerReview(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.rating}"
+class UserDetails(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
+    phone = models.CharField(max_length=15, blank=True, null=True)
+    address = models.TextField(blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
 
+    def __str__(self):
+        return self.name
 

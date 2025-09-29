@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions, status
-from .models import Event,ContactMessage,Booknow, Activity,  CustomerReview
-from .serializers import EventSerializer,  LoginSerializer, ContactMessageSerializer, BooknowSerializer, ActivitySerializer, RegisterSerializer, CustomerReviewSerializer
+from .models import Event,ContactMessage,Booknow,UserDetails, Activity,  CustomerReview
+from .serializers import EventSerializer,UserDetailsSerializer,  LoginSerializer, ContactMessageSerializer, BooknowSerializer, ActivitySerializer, RegisterSerializer, CustomerReviewSerializer
 from django.contrib.auth.models import User
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -112,5 +112,15 @@ class CustomerReviewViewSet(viewsets.ModelViewSet):
     serializer_class = CustomerReviewSerializer
     permission_classes = [IsAuthenticated, IsAdminOrReadWrite]
     
+class UserViewSet(viewsets.ModelViewSet):
+    serializer_class = UserDetailsSerializer
+    permission_classes = [IsAuthenticated, IsAdminOrReadWrite]
 
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_staff:  # admin sees all bookings
+            return UserDetails.objects.all()
+        return UserDetails.objects.filter(email=user.email)  # normal user -> only their bookings
 
+    def perform_create(self, serializer):
+        serializer.save(email=self.request.user.email)  # auto-fill user email
